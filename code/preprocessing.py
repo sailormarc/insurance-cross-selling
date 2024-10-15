@@ -17,7 +17,6 @@ def vehicle_age_to_int(vehicle_age_col: pd.Series) -> pd.Series:
     }
     return vehicle_age_col.map(map_vehicle_age)
 
-
 def map_categorical_to_int(df: pd.DataFrame) -> pd.DataFrame:
     """map categorical str columns of the df to integer categories
 
@@ -28,13 +27,15 @@ def map_categorical_to_int(df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: dataframe with numeric columns
     """
 
-    categorical_cols = ["Gender", "Vehicle_Damage"]
+    # convert region code and policy sales channel to int for readability
     df_mapped = df.copy()
-    for col in categorical_cols:
-        df_mapped[col] = pd.factorize(df_mapped[col])[0]
+    df_mapped[["Region_Code", "Policy_Sales_Channel"]] = df_mapped[["Region_Code", "Policy_Sales_Channel"]].astype(int)
+
+    # one-hot encode
+    categorical_cols = ["Gender", "Vehicle_Damage", "Region_Code", "Policy_Sales_Channel"]
+    df_mapped = pd.get_dummies(data = df_mapped, columns=categorical_cols, dtype=int)
 
     # use vehicle_age_to_int function to maintain ordering
     df_mapped["Vehicle_Age"] = vehicle_age_to_int(df_mapped["Vehicle_Age"])
-    
     
     return df_mapped
