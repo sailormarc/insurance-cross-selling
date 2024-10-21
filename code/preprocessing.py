@@ -33,6 +33,7 @@ def map_categorical_to_int(df: pd.DataFrame) -> pd.DataFrame:
 
     # one-hot encode
     categorical_cols = ["Gender", "Vehicle_Damage", "Region_Code", "Policy_Sales_Channel"]
+    # TODO: group "other" channels to reduce load of one hot encoding
     df_mapped = pd.get_dummies(data = df_mapped, columns=categorical_cols, drop_first=True, dtype=int)
 
     # use vehicle_age_to_int function to maintain ordering
